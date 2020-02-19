@@ -1,16 +1,5 @@
-/* Process inline math */
-/*
-Like markdown-it-simplemath, this is a stripped down, simplified version of:
-https://github.com/runarberg/markdown-it-math
-
-It differs in that it takes (a subset of) LaTeX as input and relies on KaTeX
-for rendering output.
-*/
-
 /*jslint node: true */
 'use strict';
-
-var katex = require('katex');
 
 const escapeHtml = require('./md-html-util').default.escapeHtml
 
@@ -161,25 +150,12 @@ module.exports = function math_plugin(md, options) {
 
     options = options || {};
 
-    // set KaTeX as the renderer for markdown-it-simplemath
-    var katexInline = function(latex){
-        options.displayMode = false;
-        try{
-            return katex.renderToString(latex, options);
-        }
-        catch(error){
-            if(options.throwOnError){ console.log(error); }
-            return latex;
-        }
-    };
-
     var inlineRenderer = function(tokens, idx){
         return '<img eeimg="1" src="//www.zhihu.com/equation?tex=' + encodeURI(tokens[idx].content) + '" alt="' + escapeHtml(tokens[idx].content).trim() + '"/>'
     };
 
     var blockRenderer = function(tokens, idx){
         return '<p><img eeimg="1" src="//www.zhihu.com/equation?tex=' + encodeURI(tokens[idx].content) + '" alt="' + escapeHtml(tokens[idx].content).trim() + '"/></p>'
-        // return  katexBlock(tokens[idx].content) + '\n';
     }
 
     md.inline.ruler.after('escape', 'math_inline', math_inline);
