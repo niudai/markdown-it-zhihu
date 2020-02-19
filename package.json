@@ -1,7 +1,7 @@
 {
-  "name": "markdown-it-katex",
+  "name": "markdown-it-zhihu",
   "version": "2.0.3",
-  "description": "Fast math support for markdown-it with KaTeX",
+  "description": "fast markdown-it plugin for zhihu innerhtml",
   "main": "index.js",
   "scripts": {
     "watch": "watchify browser.js -o bundle.js -v",
@@ -25,7 +25,7 @@
     "katex": "^0.6.0"
   },
   "devDependencies": {
-    "markdown-it": "^6.0.0",
+    "markdown-it": "^6.1.1",
     "markdown-it-testgen": "^0.1.4",
     "tape": "^4.5.1"
   }

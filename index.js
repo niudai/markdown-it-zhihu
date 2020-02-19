@@ -12,6 +12,10 @@ for rendering output.
 
 var katex = require('katex');
 
+const escapeHtml = require('./md-html-util').default.escapeHtml
+
+const unescapeMd = require('./md-html-util').default.unescapeMd;
+
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
 function isValidDelim(state, pos) {
@@ -170,22 +174,12 @@ module.exports = function math_plugin(md, options) {
     };
 
     var inlineRenderer = function(tokens, idx){
-        return katexInline(tokens[idx].content);
+        return '<img eeimg="1" src="//www.zhihu.com/equation?tex=' + encodeURI(tokens[idx].content) + '" alt="' + escapeHtml(tokens[idx].content).trim() + '"/>'
     };
 
-    var katexBlock = function(latex){
-        options.displayMode = true;
-        try{
-            return "<p>" + katex.renderToString(latex, options) + "</p>";
-        }
-        catch(error){
-            if(options.throwOnError){ console.log(error); }
-            return latex;
-        }
-    }
-
     var blockRenderer = function(tokens, idx){
-        return  katexBlock(tokens[idx].content) + '\n';
+        return '<p><img eeimg="1" src="//www.zhihu.com/equation?tex=' + encodeURI(tokens[idx].content) + '" alt="' + escapeHtml(tokens[idx].content).trim() + '"/></p>'
+        // return  katexBlock(tokens[idx].content) + '\n';
     }
 
     md.inline.ruler.after('escape', 'math_inline', math_inline);
@@ -194,4 +188,54 @@ module.exports = function math_plugin(md, options) {
     });
     md.renderer.rules.math_inline = inlineRenderer;
     md.renderer.rules.math_block = blockRenderer;
+    md.renderer.rules.fence = fenceRenderer;
+};
+
+function fenceRenderer(tokens, idx, options, env, slf) {
+	var token = tokens[idx],
+		info = token.info ? unescapeMd(token.info).trim() : '',
+		langName = '',
+		highlighted, i, tmpAttrs, tmpToken;
+
+	if (info) {
+		langName = info.split(/\s+/g)[0];
+	}
+
+	if (options.highlight) {
+		highlighted = options.highlight(token.content, langName) || escapeHtml(token.content);
+	} else {
+		highlighted = escapeHtml(token.content);
+	}
+
+	if (highlighted.indexOf('<pre') === 0) {
+		return highlighted + '\n';
+	}
+
+	// If language exists, inject class gently, without modifying original token.
+	// May be, one day we will add .clone() for token and simplify this part, but
+	// now we prefer to keep things local.
+	if (info) {
+		i = token.attrIndex('lang');
+		tmpAttrs = token.attrs ? token.attrs.slice() : [];
+
+		if (i < 0) {
+			tmpAttrs.push(['lang', langName]);
+		} else {
+			tmpAttrs[i][1] += ' ' + langName;
+		}
+
+		// Fake token just to render attributes
+		tmpToken = {
+			attrs: tmpAttrs
+		};
+
+		return '<pre' + slf.renderAttrs(tmpToken) + '>'
+			+ highlighted
+			+ '</pre>\n';
+	}
+
+
+	return '<pre' + slf.renderAttrs(token) + '>'
+		+ highlighted
+		+ '</pre>\n';
 };
