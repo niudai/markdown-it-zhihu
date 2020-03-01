@@ -1,9 +1,9 @@
 /*jslint node: true */
 'use strict';
 
-const escapeHtml = require('./md-html-util').default.escapeHtml
+const escapeHtml = require('./md-html-util').escapeHtml
 
-const unescapeMd = require('./md-html-util').default.unescapeMd;
+const unescapeMd = require('./md-html-util').unescapeMd;
 
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
@@ -165,6 +165,10 @@ module.exports = function math_plugin(md, options) {
     md.renderer.rules.math_inline = inlineRenderer;
     md.renderer.rules.math_block = blockRenderer;
     md.renderer.rules.fence = fenceRenderer;
+    let render = md.renderer.render;
+    md.renderer.render = function(tokens, options, env) {
+        return render.call(md.renderer, tokens, options, env).replace(/\n/g, '');
+    }
 };
 
 function fenceRenderer(tokens, idx, options, env, slf) {

@@ -50,4 +50,7 @@ function beautifyDate(date) {
 
 
 
-module.exports = { escapeHtml, unescapeMd, removeHtmlTag, removeSpace, beautifyDate }
+exports.escapeHtml =  escapeHtml;
+exports.unescapeMd = unescapeMd;
+exports.removeHtmlTag = removeHtmlTag;
+exports.removeSpace = removeSpace;
