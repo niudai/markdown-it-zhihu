@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-zhihu",
-  "version": "2.0.5",
+  "version": "2.0.8",
   "description": "fast markdown-it plugin for zhihu innerhtml",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:waylonflinn/markdown-it-katex.git"
+    "url": "git+ssh://git@github.com:niudai/markdown-it-zhihu.git"
   },
   "keywords": [
     "markdown",
@@ -21,6 +21,7 @@
   "author": "https://github.com/niudai",
   "license": "MIT",
   "dependencies": {
+    "zhihu-markdown": "^1.0.3"
   },
   "devDependencies": {
     "markdown-it": "^6.1.1",

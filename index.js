@@ -158,6 +158,15 @@ module.exports = function math_plugin(md, options) {
         return '<p><img eeimg="1" src="//www.zhihu.com/equation?tex=' + encodeURI(tokens[idx].content) + '" alt="' + escapeHtml(tokens[idx].content).trim() + '"/></p>'
     }
 
+    var imageRenderer = function(tokens, idx) {
+        let link = tokens[idx].attrs[0][1];
+        let src = link.replace(/^(https:\/\/.+)(\.\w+)$/g, '$1');
+        let ext = link.replace(/^(https:\/\/.+)(\.\w+)$/g, '$2');
+
+        const SrcReg = /^(https:\/\/.+)(\.\w+)$/g
+        return `<img src="${src}_1440w${ext}" data-caption="" data-size="normal" data-watermark="original" data-original-src="${src}_r${ext}"/>`
+    }
+
     md.inline.ruler.after('escape', 'math_inline', math_inline);
     md.block.ruler.after('blockquote', 'math_block', math_block, {
         alt: [ 'paragraph', 'reference', 'blockquote', 'list' ]
@@ -165,9 +174,10 @@ module.exports = function math_plugin(md, options) {
     md.renderer.rules.math_inline = inlineRenderer;
     md.renderer.rules.math_block = blockRenderer;
     md.renderer.rules.fence = fenceRenderer;
+    md.renderer.rules.image = imageRenderer;
     let render = md.renderer.render;
     md.renderer.render = function(tokens, options, env) {
-        return render.call(md.renderer, tokens, options, env).replace(/\n/g, '');
+        return render.call(md.renderer, tokens, options, env).replace(/(<\/[^<>]+>)\n/g, '$1');
     }
 };
 
