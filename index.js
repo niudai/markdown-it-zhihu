@@ -193,7 +193,7 @@ function linkOpenRenderer(tokens, idx, options, env, slf) {
             result += ' data-draft-node="block"  data-draft-type="link-card"';
         }
     }
-    result += '/>';
+    result += '>';
     return result;
 }
 

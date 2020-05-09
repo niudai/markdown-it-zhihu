@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-zhihu",
-  "version": "2.0.8",
+  "version": "2.0.10",
   "description": "fast markdown-it plugin for zhihu innerhtml",
   "main": "index.js",
   "scripts": {
