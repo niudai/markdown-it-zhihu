@@ -145,6 +145,8 @@ function math_block(state, start, end, silent){
     return true;
 }
 
+
+
 module.exports = function math_plugin(md, options) {
     // Default options
 
@@ -175,11 +177,25 @@ module.exports = function math_plugin(md, options) {
     md.renderer.rules.math_block = blockRenderer;
     md.renderer.rules.fence = fenceRenderer;
     md.renderer.rules.image = imageRenderer;
+    md.renderer.rules.link_open = linkOpenRenderer;
     let render = md.renderer.render;
     md.renderer.render = function(tokens, options, env) {
         return render.call(md.renderer, tokens, options, env).replace(/(<\/[^<>]+>)\n/g, '$1');
     }
 };
+
+function linkOpenRenderer(tokens, idx, options, env, slf) {
+    var i, l, result;
+    result = "<" + tokens[idx].tag;
+    for (i = 0, l = tokens[idx].attrs.length; i < l; i++) {
+        result += ' ' + escapeHtml(tokens[idx].attrs[i][0]) + '="' + escapeHtml(tokens[idx].attrs[i][1]) + '"';
+        if (tokens[idx].attrs[i][0] == "title" && tokens[idx].attrs[i][1] == "card") {
+            result += ' draft-data-node="block"  draft-data-type="link-card"';
+        }
+    }
+    result += '/>';
+    return result;
+}
 
 function fenceRenderer(tokens, idx, options, env, slf) {
 	var token = tokens[idx],
