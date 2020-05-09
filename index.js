@@ -190,7 +190,7 @@ function linkOpenRenderer(tokens, idx, options, env, slf) {
     for (i = 0, l = tokens[idx].attrs.length; i < l; i++) {
         result += ' ' + escapeHtml(tokens[idx].attrs[i][0]) + '="' + escapeHtml(tokens[idx].attrs[i][1]) + '"';
         if (tokens[idx].attrs[i][0] == "title" && tokens[idx].attrs[i][1] == "card") {
-            result += ' draft-data-node="block"  draft-data-type="link-card"';
+            result += ' data-draft-node="block"  data-draft-type="link-card"';
         }
     }
     result += '/>';
