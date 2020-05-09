@@ -164,7 +164,7 @@ module.exports = function math_plugin(md, options) {
         let ext = link.replace(/^(https:\/\/.+)(\.\w+)$/g, '$2');
 
         const SrcReg = /^(https:\/\/.+)(\.\w+)$/g
-        return `<img src="${src}_1440w${ext}" data-caption="" data-size="normal" data-watermark="original" data-original-src="${src}_r${ext}"/>`
+        return `<img src="${src}_1440w${ext}" data-caption="${tokens[idx].content}" data-size="normal" data-watermark="original" data-original-src="${src}_r${ext}"/>`
     }
 
     md.inline.ruler.after('escape', 'math_inline', math_inline);
